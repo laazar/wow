@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WoW Forever — Graphics &amp; Utility Macros (9 Buttons)</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --bg-elevated: #121722;
+      --bg-code: #090c11;
+      --border: #232c3d;
+      --text: #e6edf7;
+      --text-muted: #93a3ba;
+      --gold: #e0b354;
+      --gold-dim: rgba(224, 179, 84, 0.14);
+      --green: #2dd47c;
+      --green-bg: rgba(45, 212, 124, 0.14);
+      --red: #f87171;
+      --red-bg: #261216;
+      --radius: 12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(1200px 500px at 50% -120px, rgba(224, 179, 84, 0.09), transparent 70%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .hero h1 span { color: var(--gold); }
+    .hero p { margin: 0; color: var(--text-muted); font-size: 0.96rem; }
+
+    .quick-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    .quick-nav a {
+      text-decoration: none;
+      color: var(--text);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .quick-nav a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 30px 0 14px;
+    }
+    .section-head h2 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #fff; }
+    .section-head .hint { font-size: 0.85rem; color: var(--text-muted); }
+
+    .setup-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .setup-bar strong { color: var(--text); }
+
+    .inline-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--gold);
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .inline-copy:hover { border-color: var(--gold); background: var(--gold-dim); }
+    .inline-copy.copied { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+
+    .table-wrap {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    thead th {
+      text-align: left;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.025);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid rgba(35, 44, 61, 0.65); transition: background 0.12s ease; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    td { padding: 9px 14px; vertical-align: middle; font-size: 0.89rem; }
+    .col-cmd { width: 250px; white-space: nowrap; }
+    .col-vals { width: 235px; }
+    .col-desc { color: var(--text-muted); }
+
+    .cmd-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      background: var(--bg-code);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.08s ease;
+    }
+    .cmd-pill:hover { border-color: var(--gold); background: rgba(224, 179, 84, 0.07); }
+    .cmd-pill:active { transform: scale(0.99); }
+    .cmd-pill .mini-status {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .cmd-pill:hover .mini-status { color: var(--gold); }
+    .cmd-pill.copied { border-color: var(--green); background: var(--green-bg); }
+    .cmd-pill.copied .mini-status { color: #062113; background: var(--green); }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .val-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-code);
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+    .val-chip:hover { border-color: var(--gold); background: var(--gold-dim); }
+    .val-chip .chip-check {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      font-family: var(--sans);
+      font-weight: 700;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+    .val-chip.copied {
+      border-color: var(--green);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .val-chip.copied .chip-text { opacity: 0; }
+    .val-chip.copied .chip-check { opacity: 1; }
+
+    .cards-stack { display: flex; flex-direction: column; gap: 20px; }
+    .preset-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      border-top: 3px solid var(--accent-color, var(--gold));
+    }
+    .accent-slate {
+      --accent-color: #94a3b8;
+      --accent-bg: rgba(148, 163, 184, 0.18);
+      --accent-border: rgba(148, 163, 184, 0.4);
+      --accent-ring: rgba(148, 163, 184, 0.35);
+    }
+    .accent-blue {
+      --accent-color: #5aa9ff;
+      --accent-bg: rgba(90, 169, 255, 0.18);
+      --accent-border: rgba(90, 169, 255, 0.4);
+      --accent-ring: rgba(90, 169, 255, 0.35);
+    }
+    .accent-gold {
+      --accent-color: #e0b354;
+      --accent-bg: rgba(224, 179, 84, 0.18);
+      --accent-border: rgba(224, 179, 84, 0.4);
+      --accent-ring: rgba(224, 179, 84, 0.35);
+    }
+    .accent-teal {
+      --accent-color: #38d9c0;
+      --accent-bg: rgba(56, 217, 192, 0.18);
+      --accent-border: rgba(56, 217, 192, 0.4);
+      --accent-ring: rgba(56, 217, 192, 0.35);
+    }
+    .accent-indigo {
+      --accent-color: #7c8cff;
+      --accent-bg: rgba(124, 140, 255, 0.18);
+      --accent-border: rgba(124, 140, 255, 0.4);
+      --accent-ring: rgba(124, 140, 255, 0.35);
+    }
+    .accent-purple {
+      --accent-color: #b87dff;
+      --accent-bg: rgba(184, 125, 255, 0.18);
+      --accent-border: rgba(184, 125, 255, 0.4);
+      --accent-ring: rgba(184, 125, 255, 0.35);
+    }
+
+    .card-header { margin-bottom: 14px; }
+    .card-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .card-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: var(--accent-bg);
+      color: var(--accent-color);
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: 1px solid var(--accent-border);
+    }
+    .card-header h3 { margin: 0; font-size: 1.12rem; font-weight: 700; color: #fff; }
+    .btn-count-tag {
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .card-sub { margin: 0; font-size: 0.87rem; color: var(--text-muted); }
+
+    .macro-grid { display: grid; gap: 14px; }
+    .macro-grid.two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .macro-grid.one-col { grid-template-columns: 1fr; }
+    @media (max-width: 820px) {
+      .macro-grid.two-col { grid-template-columns: 1fr; }
+    }
+
+    .macro-box {
+      position: relative;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px 14px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, transform 0.08s ease;
+      outline: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .macro-box:hover {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 1px var(--accent-ring);
+    }
+    .macro-box:focus-visible {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(224, 179, 84, 0.28);
+    }
+    .macro-box:active { transform: scale(0.996); }
+    .macro-box.copied {
+      border-color: var(--green);
+      background: #0a1711;
+      box-shadow: 0 0 0 1px rgba(45, 212, 124, 0.45), 0 8px 24px rgba(45, 212, 124, 0.12);
+    }
+
+    .macro-box-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(35, 44, 61, 0.75);
+    }
+    .macro-box-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn-name { font-weight: 700; font-size: 0.92rem; color: #fff; }
+    .char-badge {
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 1px 7px;
+      border-radius: 6px;
+    }
+    .copy-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 7px;
+      white-space: nowrap;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+    .macro-box:hover .copy-pill {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+    .macro-box.copied .copy-pill {
+      background: var(--green);
+      border-color: var(--green);
+      color: #052012;
+    }
+
+    .macro-code {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #d6e2f5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: text;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      background: #102419;
+      color: var(--green);
+      border: 1px solid var(--green);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 999;
+      max-width: calc(100vw - 32px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toast.toast-error {
+      background: var(--red-bg);
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    footer {
+      margin-top: 42px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div>
+        <h1>WoW Forever <span>Graphics &amp; Utility Macros</span></h1>
+        <p>Click any command, value chip, or macro box below to copy straight to your clipboard — all 9 macros fit under WoW's 255-character limit.</p>
+      </div>
+      <nav class="quick-nav" aria-label="Jump to section">
+        <a href="#cheatsheet">CVars</a>
+        <a href="#stock">1. Stock</a>
+        <a href="#city">2. City</a>
+        <a href="#ultra">3. Ultra</a>
+        <a href="#fog">4. Fog</a>
+        <a href="#rain">5. Rain</a>
+        <a href="#camera">6. Camera</a>
+      </nav>
+    </header>
+
+    <div class="setup-bar">
+      <span><strong>In-Game Setup:</strong> Type</span>
+      <button type="button" class="inline-copy copy-trigger" data-copy="/m" data-label="/m">/m</button>
+      <span>→ click <strong>New</strong> → paste a macro box → drag to your action bar. Changes apply live with no reload and save to <strong>Config.wtf</strong>.</span>
+    </div>
+
+    <div class="section-head" id="cheatsheet">
+      <h2>Graphical Console Commands Cheat Sheet</h2>
+      <span class="hint">Click a command to copy <code>/console &lt;cmd&gt;</code>, or click any value chip to copy the full ready-to-run line.</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Console Command (Click to Copy)</th>
+            <th>Preset Values (Click to Copy Full Line)</th>
+            <th>What It Does</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console ResampleAlwaysSharpen" data-label="/console ResampleAlwaysSharpen" title="Click to copy: /console ResampleAlwaysSharpen">
+              <code>ResampleAlwaysSharpen</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console ResampleAlwaysSharpen 0" data-label="/console ResampleAlwaysSharpen 0" title="Click to copy: /console ResampleAlwaysSharpen 0"><span class="chip-text">0</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console ResampleAlwaysSharpen 1" data-label="/console ResampleAlwaysSharpen 1" title="Click to copy: /console ResampleAlwaysSharpen 1"><span class="chip-text">1</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Keeps image sharpening active even at 100% native resolution for sharper textures.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console ResampleSharpness" data-label="/console ResampleSharpness" title="Click to copy: /console ResampleSharpness">
+              <code>ResampleSharpness</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console ResampleSharpness 0.8" data-label="/console ResampleSharpness 0.8" title="Click to copy: /console ResampleSharpness 0.8"><span class="chip-text">0.8</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Controls sharpening intensity when enabled (crisp detail without harsh edges).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console groundEffectDensity" data-label="/console groundEffectDensity" title="Click to copy: /console groundEffectDensity">
+              <code>groundEffectDensity</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDensity 128" data-label="/console groundEffectDensity 128" title="Click to copy: /console groundEffectDensity 128"><span class="chip-text">128</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDensity 192" data-label="/console groundEffectDensity 192" title="Click to copy: /console groundEffectDensity 192"><span class="chip-text">192</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDensity 256" data-label="/console groundEffectDensity 256" title="Click to copy: /console groundEffectDensity 256"><span class="chip-text">256</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Sets density of grass, flowers, and ground clutter (256 = maximum lushness).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console groundEffectDist" data-label="/console groundEffectDist" title="Click to copy: /console groundEffectDist">
+              <code>groundEffectDist</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDist 200" data-label="/console groundEffectDist 200" title="Click to copy: /console groundEffectDist 200"><span class="chip-text">200</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDist 320" data-label="/console groundEffectDist 320" title="Click to copy: /console groundEffectDist 320"><span class="chip-text">320</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectDist 500" data-label="/console groundEffectDist 500" title="Click to copy: /console groundEffectDist 500"><span class="chip-text">500</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">How far away ground clutter renders (500 eliminates close-range grass pop-in).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console groundEffectFade" data-label="/console groundEffectFade" title="Click to copy: /console groundEffectFade">
+              <code>groundEffectFade</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectFade 200" data-label="/console groundEffectFade 200" title="Click to copy: /console groundEffectFade 200"><span class="chip-text">200</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectFade 280" data-label="/console groundEffectFade 280" title="Click to copy: /console groundEffectFade 280"><span class="chip-text">280</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console groundEffectFade 370" data-label="/console groundEffectFade 370" title="Click to copy: /console groundEffectFade 370"><span class="chip-text">370</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Distance where ground clutter smoothly fades out instead of snapping away.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console LODObjectFadeScale" data-label="/console LODObjectFadeScale" title="Click to copy: /console LODObjectFadeScale">
+              <code>LODObjectFadeScale</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console LODObjectFadeScale 100" data-label="/console LODObjectFadeScale 100" title="Click to copy: /console LODObjectFadeScale 100"><span class="chip-text">100</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console LODObjectFadeScale 150" data-label="/console LODObjectFadeScale 150" title="Click to copy: /console LODObjectFadeScale 150"><span class="chip-text">150</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console LODObjectFadeScale 250" data-label="/console LODObjectFadeScale 250" title="Click to copy: /console LODObjectFadeScale 250"><span class="chip-text">250</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Extends how far buildings and props stay high-detail before dropping to lower LODs.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console lodObjectCullSize" data-label="/console lodObjectCullSize" title="Click to copy: /console lodObjectCullSize">
+              <code>lodObjectCullSize</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console lodObjectCullSize 18" data-label="/console lodObjectCullSize 18" title="Click to copy: /console lodObjectCullSize 18"><span class="chip-text">18</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console lodObjectCullSize 14" data-label="/console lodObjectCullSize 14" title="Click to copy: /console lodObjectCullSize 14"><span class="chip-text">14</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console lodObjectCullSize 5" data-label="/console lodObjectCullSize 5" title="Click to copy: /console lodObjectCullSize 5"><span class="chip-text">5</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Minimum on-screen size before distant objects vanish (lower keeps smaller distant details visible).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console terrainLodDist" data-label="/console terrainLodDist" title="Click to copy: /console terrainLodDist">
+              <code>terrainLodDist</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console terrainLodDist 500" data-label="/console terrainLodDist 500" title="Click to copy: /console terrainLodDist 500"><span class="chip-text">500</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console terrainLodDist 750" data-label="/console terrainLodDist 750" title="Click to copy: /console terrainLodDist 750"><span class="chip-text">750</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console terrainLodDist 1000" data-label="/console terrainLodDist 1000" title="Click to copy: /console terrainLodDist 1000"><span class="chip-text">1000</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Distance at which mountains and terrain meshes stay sharp instead of flattening out.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console horizonStart" data-label="/console horizonStart" title="Click to copy: /console horizonStart">
+              <code>horizonStart</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console horizonStart 600" data-label="/console horizonStart 600" title="Click to copy: /console horizonStart 600"><span class="chip-text">600</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console horizonStart 1000" data-label="/console horizonStart 1000" title="Click to copy: /console horizonStart 1000"><span class="chip-text">1000</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console horizonStart 2000" data-label="/console horizonStart 2000" title="Click to copy: /console horizonStart 2000"><span class="chip-text">2000</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console horizonStart 4000" data-label="/console horizonStart 4000" title="Click to copy: /console horizonStart 4000"><span class="chip-text">4000</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Distance where horizon fog begins (lower = thicker atmosphere; higher = clearer far view).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console farclip" data-label="/console farclip" title="Click to copy: /console farclip">
+              <code>farclip</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console farclip 2500" data-label="/console farclip 2500" title="Click to copy: /console farclip 2500"><span class="chip-text">2500</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console farclip 3000" data-label="/console farclip 3000" title="Click to copy: /console farclip 3000"><span class="chip-text">3000</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console farclip 5000" data-label="/console farclip 5000" title="Click to copy: /console farclip 5000"><span class="chip-text">5000</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Maximum world and terrain draw distance cutoff.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console volumeFog" data-label="/console volumeFog" title="Click to copy: /console volumeFog">
+              <code>volumeFog</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console volumeFog 0" data-label="/console volumeFog 0" title="Click to copy: /console volumeFog 0"><span class="chip-text">0</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console volumeFog 1" data-label="/console volumeFog 1" title="Click to copy: /console volumeFog 1"><span class="chip-text">1</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Toggles volumetric atmospheric fog on or off.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console volumeFogLevel" data-label="/console volumeFogLevel" title="Click to copy: /console volumeFogLevel">
+              <code>volumeFogLevel</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console volumeFogLevel 4" data-label="/console volumeFogLevel 4" title="Click to copy: /console volumeFogLevel 4"><span class="chip-text">4</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Sets volumetric fog lighting and depth scattering to max quality.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console giquality" data-label="/console giquality" title="Click to copy: /console giquality">
+              <code>giquality</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console giquality 4" data-label="/console giquality 4" title="Click to copy: /console giquality 4"><span class="chip-text">4</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Global Illumination quality for richer bounced ambient lighting.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console sunShafts" data-label="/console sunShafts" title="Click to copy: /console sunShafts">
+              <code>sunShafts</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console sunShafts 2" data-label="/console sunShafts 2" title="Click to copy: /console sunShafts 2"><span class="chip-text">2</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Enables high-quality god rays and sunbeams through trees and skies.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console ffxGlow" data-label="/console ffxGlow" title="Click to copy: /console ffxGlow">
+              <code>ffxGlow</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console ffxGlow 1" data-label="/console ffxGlow 1" title="Click to copy: /console ffxGlow 1"><span class="chip-text">1</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Enables full-screen atmospheric bloom and glow on lights and spells.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console weatherDensity" data-label="/console weatherDensity" title="Click to copy: /console weatherDensity">
+              <code>weatherDensity</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console weatherDensity 0" data-label="/console weatherDensity 0" title="Click to copy: /console weatherDensity 0"><span class="chip-text">0</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console weatherDensity 2" data-label="/console weatherDensity 2" title="Click to copy: /console weatherDensity 2"><span class="chip-text">2</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console weatherDensity 3" data-label="/console weatherDensity 3" title="Click to copy: /console weatherDensity 3"><span class="chip-text">3</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Rain/snow intensity (0 = off, 2 = stock, 3 = heavy ultra weather).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console reflectionMode" data-label="/console reflectionMode" title="Click to copy: /console reflectionMode">
+              <code>reflectionMode</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console reflectionMode 3" data-label="/console reflectionMode 3" title="Click to copy: /console reflectionMode 3"><span class="chip-text">3</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Maxes out water and surface reflections (terrain, sky, buildings, and objects).</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console shadowTextureSize" data-label="/console shadowTextureSize" title="Click to copy: /console shadowTextureSize">
+              <code>shadowTextureSize</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console shadowTextureSize 2048" data-label="/console shadowTextureSize 2048" title="Click to copy: /console shadowTextureSize 2048"><span class="chip-text">2048</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Locks shadow map resolution at 2048 for crisp shadows without excessive GPU cost.</td>
+        </tr>
+        <tr>
+          <td class="col-cmd">
+            <button type="button" class="cmd-pill copy-trigger" data-copy="/console ActionCam" data-label="/console ActionCam" title="Click to copy: /console ActionCam">
+              <code>ActionCam</code>
+              <span class="mini-status">Copy</span>
+            </button>
+          </td>
+          <td class="col-vals">
+            <div class="chip-group"><button type="button" class="val-chip copy-trigger" data-copy="/console ActionCam basic" data-label="/console ActionCam basic" title="Click to copy: /console ActionCam basic"><span class="chip-text">basic</span><span class="chip-check" aria-hidden="true">✓</span></button><button type="button" class="val-chip copy-trigger" data-copy="/console ActionCam off" data-label="/console ActionCam off" title="Click to copy: /console ActionCam off"><span class="chip-text">off</span><span class="chip-check" aria-hidden="true">✓</span></button></div>
+          </td>
+          <td class="col-desc">Dynamic over-the-shoulder camera framing and subtle pitch tracking.</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-head" id="macros">
+      <h2>6 Macro Sets (9 Buttons Total)</h2>
+      <span class="hint">Click anywhere on a macro box to copy exact line breaks for WoW.</span>
+    </div>
+
+    <main class="cards-stack">
+      <section class="preset-card accent-slate" id="stock">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">1</span>
+            <h3>Stock</h3>
+            <span class="btn-count-tag">2 Buttons</span>
+          </div>
+          <p class="card-sub">Baseline / balanced defaults — click Stock 1 then Stock 2.</p>
+        </header>
+        <div class="macro-grid two-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Stock 1 (215 chars)"
+               aria-label="Copy Stock 1 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Stock 1</span>
+                <span class="char-badge">215 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console ResampleAlwaysSharpen 0
+/console groundEffectDensity 128
+/console groundEffectDist 200
+/console groundEffectFade 200
+/console LODObjectFadeScale 100
+/console lodObjectCullSize 18
+/console terrainLodDist 500</code></pre>
+          </div>
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Stock 2 (240 chars)"
+               aria-label="Copy Stock 2 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Stock 2</span>
+                <span class="char-badge">240 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console horizonStart 1000
+/console farclip 2500
+/console volumeFog 1
+/console volumeFogLevel 4
+/console giquality 4
+/console sunShafts 2
+/console ffxGlow 1
+/console weatherDensity 2
+/console reflectionMode 3
+/console shadowTextureSize 2048</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="preset-card accent-blue" id="city">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">2</span>
+            <h3>City</h3>
+            <span class="btn-count-tag">2 Buttons</span>
+          </div>
+          <p class="card-sub">Sharper mid-range draw &amp; smooth frame rates for crowded hubs — click City 1 then City 2.</p>
+        </header>
+        <div class="macro-grid two-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="City 1 (246 chars)"
+               aria-label="Copy City 1 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">City 1</span>
+                <span class="char-badge">246 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console ResampleAlwaysSharpen 1
+/console ResampleSharpness 0.8
+/console groundEffectDensity 192
+/console groundEffectDist 320
+/console groundEffectFade 280
+/console LODObjectFadeScale 150
+/console lodObjectCullSize 14
+/console terrainLodDist 750</code></pre>
+          </div>
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="City 2 (240 chars)"
+               aria-label="Copy City 2 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">City 2</span>
+                <span class="char-badge">240 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console horizonStart 1000
+/console farclip 3000
+/console volumeFog 1
+/console volumeFogLevel 4
+/console giquality 4
+/console sunShafts 2
+/console ffxGlow 1
+/console weatherDensity 2
+/console reflectionMode 3
+/console shadowTextureSize 2048</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="preset-card accent-gold" id="ultra">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">3</span>
+            <h3>Ultra</h3>
+            <span class="btn-count-tag">2 Buttons</span>
+          </div>
+          <p class="card-sub">Max foliage, extended terrain LOD, 5000 farclip &amp; full atmosphere — click Ultra 1 then Ultra 2.</p>
+        </header>
+        <div class="macro-grid two-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Ultra 1 (246 chars)"
+               aria-label="Copy Ultra 1 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Ultra 1</span>
+                <span class="char-badge">246 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console ResampleAlwaysSharpen 1
+/console ResampleSharpness 0.8
+/console groundEffectDensity 256
+/console groundEffectDist 500
+/console groundEffectFade 370
+/console LODObjectFadeScale 250
+/console lodObjectCullSize 5
+/console terrainLodDist 1000</code></pre>
+          </div>
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Ultra 2 (239 chars)"
+               aria-label="Copy Ultra 2 macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Ultra 2</span>
+                <span class="char-badge">239 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/console horizonStart 600
+/console farclip 5000
+/console volumeFog 1
+/console volumeFogLevel 4
+/console giquality 4
+/console sunShafts 2
+/console ffxGlow 1
+/console weatherDensity 3
+/console reflectionMode 3
+/console shadowTextureSize 2048</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="preset-card accent-teal" id="fog">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">4</span>
+            <h3>Fog Toggle</h3>
+            <span class="btn-count-tag">1 Button</span>
+          </div>
+          <p class="card-sub">Left-click cycles ULTRA (600) → PUSHED (2000) → OFF (4000, vol off). Right-click resets to ULTRA.</p>
+        </header>
+        <div class="macro-grid one-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Fog Toggle (253 chars)"
+               aria-label="Copy Fog Toggle macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Fog Toggle</span>
+                <span class="char-badge">253 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/run local s,f,h,m=SetCVar,1,600,&quot;ULTRA&quot; if GetMouseButtonClicked()~=&quot;RightButton&quot; then local c=GetCVar(&quot;horizonStart&quot;)+0 if c&lt;1200 then h,m=2000,&quot;PUSHED&quot; elseif c&lt;3000 then f,h,m=0,4000,&quot;OFF&quot; end end s(&quot;volumeFog&quot;,f)s(&quot;horizonStart&quot;,h)print(&quot;Fog: &quot;..m)</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="preset-card accent-indigo" id="rain">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">5</span>
+            <h3>Rain / Weather Toggle</h3>
+            <span class="btn-count-tag">1 Button</span>
+          </div>
+          <p class="card-sub">Left-click cycles ULTRA (3) → OFF (0) → STOCK (2). Right-click resets to ULTRA.</p>
+        </header>
+        <div class="macro-grid one-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="Rain / Weather Toggle (229 chars)"
+               aria-label="Copy Rain / Weather Toggle macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">Rain / Weather Toggle</span>
+                <span class="char-badge">229 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/run local w,m=3,&quot;ULTRA&quot; if GetMouseButtonClicked()~=&quot;RightButton&quot; then local c=tonumber(GetCVar(&quot;weatherDensity&quot;)) if c==3 then w,m=0,&quot;OFF&quot; elseif c==0 then w,m=2,&quot;STOCK&quot; end end SetCVar(&quot;weatherDensity&quot;,w) print(&quot;Weather: &quot;..m)</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="preset-card accent-purple" id="camera">
+        <header class="card-header">
+          <div class="card-title-row">
+            <span class="card-num">6</span>
+            <h3>Camera / ActionCam Toggle</h3>
+            <span class="btn-count-tag">1 Button</span>
+          </div>
+          <p class="card-sub">Toggles ActionCam BASIC / OFF and silences the experimental CVar confirmation popup.</p>
+        </header>
+        <div class="macro-grid one-col">
+          
+          <div class="macro-box copy-trigger" role="button" tabindex="0"
+               data-copy-from-code="true"
+               data-label="ActionCam Toggle (214 chars)"
+               aria-label="Copy ActionCam Toggle macro">
+            <div class="macro-box-top">
+              <div class="macro-box-title">
+                <span class="btn-name">ActionCam Toggle</span>
+                <span class="char-badge">214 / 255</span>
+              </div>
+              <span class="copy-pill">
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                <span class="copy-label">Click to Copy</span>
+              </span>
+            </div>
+            <pre class="macro-code"><code>/run UIParent:UnregisterEvent(&quot;EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED&quot;) local m=(tonumber(GetCVar(&quot;test_cameraDynamicPitch&quot;)) or 0)&gt;0 and &quot;off&quot; or &quot;basic&quot; ConsoleExec(&quot;ActionCam &quot;..m) print(&quot;ActionCam: &quot;..m:upper())</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>All 9 macros verified ≤ 255 characters for WoW macro slots.</span>
+      <span>Single-file static HTML — zero external dependencies, GitHub Pages ready.</span>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      const toast = document.getElementById("toast");
+      let toastTimer = null;
+
+      function showToast(msg, isError) {
+        toast.textContent = isError ? "✕ " + msg : "✓ Copied: " + msg;
+        toast.classList.toggle("toast-error", Boolean(isError));
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, isError ? 2600 : 1800);
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(text);
+            return true;
+          } catch (err) {
+            // Fall through to execCommand fallback
+          }
+        }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "0";
+        ta.style.left = "0";
+        ta.style.width = "1px";
+        ta.style.height = "1px";
+        ta.style.opacity = "0";
+        ta.style.fontSize = "16px";
+        document.body.appendChild(ta);
+        ta.focus({ preventScroll: true });
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        let ok = false;
+        try {
+          ok = document.execCommand("copy");
+        } catch (e) {
+          ok = false;
+        }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
+      function selectElementText(node) {
+        if (!node || !window.getSelection) return;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      function flashElement(el) {
+        el.classList.add("copied");
+        const copyLabel = el.querySelector(".copy-label");
+        const copyIcon = el.querySelector(".copy-icon");
+        const miniStatus = el.querySelector(".mini-status");
+
+        if (copyLabel) copyLabel.textContent = "Copied!";
+        if (copyIcon) copyIcon.textContent = "✓";
+        if (miniStatus) miniStatus.textContent = "✓ Copied";
+
+        clearTimeout(el._copyTimer);
+        el._copyTimer = setTimeout(() => {
+          el.classList.remove("copied");
+          if (copyLabel) copyLabel.textContent = "Click to Copy";
+          if (copyIcon) copyIcon.textContent = "⧉";
+          if (miniStatus) miniStatus.textContent = "Copy";
+        }, 1600);
+      }
+
+      async function handleCopy(el) {
+        let text = "";
+        let codeEl = null;
+        if (el.getAttribute("data-copy-from-code") === "true") {
+          codeEl = el.querySelector(".macro-code code");
+          text = codeEl ? codeEl.textContent : "";
+        } else {
+          text = el.getAttribute("data-copy") || "";
+        }
+        if (!text) return;
+
+        const label = el.getAttribute("data-label") || text;
+        const ok = await copyText(text);
+        if (ok) {
+          flashElement(el);
+          showToast(label, false);
+        } else {
+          if (codeEl) selectElementText(codeEl);
+          showToast("Clipboard blocked — press Ctrl+C to copy", true);
+        }
+      }
+
+      document.querySelectorAll(".copy-trigger").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          if (el.classList.contains("macro-box")) {
+            const sel = window.getSelection();
+            if (sel && sel.toString().length > 0 && sel.anchorNode && el.contains(sel.anchorNode)) {
+              return;
+            }
+          }
+          e.preventDefault();
+          handleCopy(el);
+        });
+
+        if (el.getAttribute("role") === "button") {
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleCopy(el);
+            }
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
